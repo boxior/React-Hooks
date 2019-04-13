@@ -1,23 +1,31 @@
 import React from "react";
-import styled from "styled-components";
 import PropTypes from "prop-types";
+import _ from "lodash";
+import CityCardView from "../../components/CityCard";
+import {forecastMap} from "../../utils/variables";
 
-const WeeklyWrap = styled.div`
-    
-`;
-
-WeeklyView.propTypes = {};
+WeeklyView.propTypes = {
+    cities: PropTypes.object
+};
 
 WeeklyView.defaultProps = {};
 
 function WeeklyView(props) {
-    const {} = props;
+    const {
+        cities
+    } = props;
 
-    return (
-        <WeeklyWrap>
-            WeeklyWrap
-        </WeeklyWrap>
-    );
+    const list = _.get(cities, "activeCity.list", []);
+    
+    return list.map((c, cIndex) => {
+        return (
+            <CityCardView
+                key={cIndex}
+                city={c}
+                type={forecastMap.weekly}
+            />
+        )
+    });
 }
 
 export default WeeklyView;

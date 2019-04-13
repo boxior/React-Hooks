@@ -1,5 +1,4 @@
 import axios from "axios";
-import React from "react";
 
 const apiKey = `61bb39d2705b2bde0d7e22fb542adea6`;
 

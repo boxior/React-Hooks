@@ -1,22 +1,28 @@
 import React from "react";
-import styled from "styled-components";
 import PropTypes from "prop-types";
+import _ from "lodash";
+import CityCardView from "../../components/CityCard";
+import {forecastMap} from "../../utils/variables";
 
-const DailyWrap = styled.div`
-    
-`;
 
-DailyView.propTypes = {};
+DailyView.propTypes = {
+    cities: PropTypes.object
+};
 
 DailyView.defaultProps = {};
 
 function DailyView(props) {
-    const {} = props;
+    const {
+        cities
+    } = props;
 
-    return (
-        <DailyWrap>
-            DailyWrap
-        </DailyWrap>
+    const activeCity = _.get(cities, "activeCity", null);
+
+    return activeCity && (
+        <CityCardView
+            city={activeCity}
+            type={forecastMap.daily}
+        />
     );
 }
 

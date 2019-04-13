@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import AppBar from '@material-ui/core/AppBar';
@@ -25,19 +25,34 @@ CitiesView.defaultProps = {};
 
 function CitiesView(props) {
     const {
-        cities, 
-        onFind, 
-        setCities, 
+        cities,
+        onFind,
+        setCities,
         type
     } = props;
 
     const {
         data,
-        activeCity,
+        activeCity
     } = cities;
+
+    const [tabIndex, setTabIndex] = useState(activeCityIndex());
+
+    useEffect(() => {
+        setTabIndex(activeCityIndex());
+    }, [activeCity.id]);
+
+    function activeCityIndex() {
+        const index = data.findIndex(c => {
+            return c.id === activeCity.id;
+        });
+        return index !== -1 ? index : 0;
+    }
 
     function handleChange(e, index) {
         const city = data[index];
+
+        setTabIndex(index);
 
         if (city) {
             setCities({
@@ -45,15 +60,9 @@ function CitiesView(props) {
                 activeCity: city
             });
 
-            onFind({city: city.name})
+            onFind({city: city.name});
         }
     }
-
-    const activeCityIndex = () => {
-        return data.findIndex(c => {
-            return c.id === activeCity.id;
-        })
-    };
 
     const getTabView = (cityIndex) => {
         switch (type) {
@@ -89,7 +98,7 @@ function CitiesView(props) {
         <CitiesWrap>
             <AppBar position="static">
                 <Tabs
-                    value={activeCityIndex()}
+                    value={tabIndex}
                     onChange={handleChange}
                     variant="scrollable"
                     scrollButtons="auto"
@@ -105,7 +114,7 @@ function CitiesView(props) {
                 </Tabs>
             </AppBar>
             {data.map((city, cityIndex) => {
-                return cityIndex === activeCityIndex()
+                return cityIndex === tabIndex
                     && getTabView(cityIndex)
             })}
         </CitiesWrap>

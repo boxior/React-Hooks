@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useContext} from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import {withFormik} from "formik";
 import * as Yup from "yup";
 import _ from "lodash";
+import {AppContext} from "../../../App/index";
 
 const SearchWrap = styled.div`
     display: flex;
@@ -35,6 +36,9 @@ SearchView.propTypes = {
 SearchView.defaultProps = {};
 
 function SearchView(props) {
+
+    const context = useContext(AppContext);
+
     const {
         values,
         touched,
@@ -46,8 +50,11 @@ function SearchView(props) {
         resetForm,
         setSubmitting,
         setFieldError,
-        cities
     } = props;
+    
+    const {
+        cities
+    } = context;
 
     const {
         isSendingGetDaily,
@@ -58,7 +65,7 @@ function SearchView(props) {
     } = cities;
 
     useEffect(() => {
-        
+
         if (!isSendingGetDaily && !isSendingGetWeekly) {
             setSubmitting(false);
         }
@@ -66,12 +73,12 @@ function SearchView(props) {
         if ((!isSuccessGetDaily && !isSendingGetDaily)
             || (!isSuccessGetWeekly && !isSendingGetWeekly)) {
             const citiesErrorMessage = _.get(cities, "error.message");
-            
+
             if (citiesErrorMessage) {
                 setFieldError("city", citiesErrorMessage)
             }
         }
-        
+
     }, [isSendingGetDaily, isSendingGetWeekly]);
 
     useEffect(() => {

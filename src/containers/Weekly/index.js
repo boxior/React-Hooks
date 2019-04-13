@@ -1,31 +1,31 @@
 import React from "react";
 import PropTypes from "prop-types";
-import _ from "lodash";
-import CityCardView from "../../components/CityCard";
+import CitiesView from "../../components/Header/Cities";
 import {forecastMap} from "../../utils/variables";
 
 WeeklyView.propTypes = {
-    cities: PropTypes.object
+    cities: PropTypes.object,
+    setCities: PropTypes.func,
+    onFind: PropTypes.func
 };
 
 WeeklyView.defaultProps = {};
 
 function WeeklyView(props) {
     const {
-        cities
+        cities,
+        setCities,
+        onFind
     } = props;
-
-    const list = _.get(cities, "activeCity.list", []);
     
-    return list.map((c, cIndex) => {
-        return (
-            <CityCardView
-                key={cIndex}
-                city={c}
-                type={forecastMap.weekly}
-            />
-        )
-    });
+    return (
+        <CitiesView
+            setCities={setCities}
+            cities={cities}
+            onFind={onFind}
+            type={forecastMap.weekly}
+        />
+    );
 }
 
 export default WeeklyView;

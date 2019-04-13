@@ -20,7 +20,7 @@ function App(props) {
     const {
         location
     } = props;
-    
+
     const [cities, setCities] = useState({
         data: [],
         activeCity: {},
@@ -30,17 +30,17 @@ function App(props) {
         isSuccessGetWeekly: true,
         error: null
     });
-    
+
     useEffect(() => {
         const activeCity = _.get(cities, "activeCity", {});
 
-        if(activeCity.name) {
+        if (activeCity.name) {
             onFind({
                 city: activeCity.name
             })
         }
     }, [location.pathname]);
-    
+
     function onFind({city}) {
 
         if (location.pathname === routesMap.daily) {
@@ -50,7 +50,7 @@ function App(props) {
                 isSendingGetDaily: true,
                 isSuccessGetDaily: false
             });
-            
+
             getDaily(city)
                 .then(res => {
                     const citiesData = _.get(cities, "data", []);
@@ -60,17 +60,17 @@ function App(props) {
                     const existCityIndex = citiesData.findIndex(city => city.id === cityRes.id);
 
                     if (existCity) {
-                        
+
                         const newCitiesData = citiesData.map((c, cIndex) => {
-                            if(cIndex === existCityIndex) {
+                            if (cIndex === existCityIndex) {
                                 return cityRes;
                             }
-                            
+
                             return c;
                         });
 
                         setCities({
-                            ...cities, 
+                            ...cities,
                             data: newCitiesData,
                             activeCity: cityRes,
                             isSendingGetDaily: false,
@@ -78,21 +78,21 @@ function App(props) {
                         })
                     } else {
                         setCities({
-                            ...cities, 
+                            ...cities,
                             data: [...citiesData, cityRes],
                             activeCity: cityRes,
                             isSendingGetDaily: false,
                             isSuccessGetDaily: true
                         })
                     }
-                    
+
                     return res;
                 })
                 .catch(err => {
                     const errRes = _.get(err, "response.data", null);
 
                     setCities({
-                        ...cities, 
+                        ...cities,
                         error: errRes,
                         isSendingGetDaily: false,
                         isSuccessGetDaily: false
@@ -108,7 +108,7 @@ function App(props) {
                 isSendingGetWeekly: true,
                 isSuccessGetWeekly: false
             });
-            
+
             getWeekly(city)
                 .then(res => {
                     const citiesData = _.get(cities, "data", []);
@@ -117,53 +117,53 @@ function App(props) {
 
                     const existCity = citiesData.find(c => c.id === city.id);
                     const existCityIndex = citiesData.findIndex(c => c.id === city.id);
-                    
+
                     if (existCity) {
-                        
+
                         const newExistCity = {
                             ...existCity,
                             ...city,
                             list: cityRes.list,
                         };
-                        
+
                         const newCitiesData = citiesData.map((c, cIndex) => {
-                            if(cIndex === existCityIndex) {
+                            if (cIndex === existCityIndex) {
                                 return newExistCity
                             }
-                            
+
                             return c;
                         });
 
                         setCities({
-                            ...cities, 
+                            ...cities,
                             data: newCitiesData,
                             activeCity: newExistCity,
                             isSendingGetWeekly: false,
                             isSuccessGetWeekly: true
                         })
                     } else {
-                        
+
                         const newCity = {
                             ...city,
                             list: cityRes.list
                         };
-                        
+
                         setCities({
-                            ...cities, 
+                            ...cities,
                             data: [...citiesData, newCity],
                             activeCity: newCity,
                             isSendingGetWeekly: false,
                             isSuccessGetWeekly: true
                         })
                     }
-                    
+
                     return res;
                 })
                 .catch(err => {
                     const errRes = _.get(err, "response.data", null);
 
                     setCities({
-                        ...cities, 
+                        ...cities,
                         error: errRes,
                         isSendingGetWeekly: false,
                         isSuccessGetWeekly: false
@@ -180,11 +180,26 @@ function App(props) {
                 <HeaderView
                     onFind={onFind}
                     cities={cities}
-                    setCities={setCities}
                 />
                 <Switch>
-                    <Route exact path={routesMap.daily} component={DailyView}/>
-                    <Route exact path={routesMap.weekly} component={WeeklyView}/>
+                    <Route
+                        exact
+                        path={routesMap.daily}
+                        render={() => <DailyView
+                            cities={cities}
+                            onFind={onFind}
+                            setCities={setCities}
+                        />}
+                    />
+                    <Route
+                        exact
+                        path={routesMap.weekly}
+                        render={() => <WeeklyView
+                            cities={cities}
+                            onFind={onFind}
+                            setCities={setCities}
+                        />}
+                    />
                 </Switch>
             </AppWrap>
         </MuiThemeProvider>

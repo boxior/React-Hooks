@@ -4,10 +4,9 @@ import PropTypes from "prop-types";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import {withRouter} from "react-router-dom";
-import {routesMap} from "../../../utils/variables";
-import DailyView from "../../../containers/Daily";
-import WeeklyView from "../../../containers/Weekly";
+import {forecastMap} from "../../../utils/variables";
+import _ from "lodash";
+import CityCardView from "../../CityCard";
 
 const CitiesWrap = styled.div`
     display: flex;
@@ -19,12 +18,18 @@ CitiesView.propTypes = {
     location: PropTypes.object,
     onFind: PropTypes.func,
     setCities: PropTypes.func,
+    type: PropTypes.string,
 };
 
 CitiesView.defaultProps = {};
 
 function CitiesView(props) {
-    const {cities, onFind, setCities, location} = props;
+    const {
+        cities, 
+        onFind, 
+        setCities, 
+        type
+    } = props;
 
     const {
         data,
@@ -51,22 +56,30 @@ function CitiesView(props) {
     };
 
     const getTabView = (cityIndex) => {
-        switch (location.pathname) {
-            case routesMap.daily:
-                return (
-                    <DailyView
+        switch (type) {
+            case forecastMap.daily:
+                const activeCity = _.get(cities, "activeCity", null);
+
+                return activeCity && (
+                    <CityCardView
                         key={cityIndex}
-                        cities={cities}
+                        city={activeCity}
+                        type={forecastMap.daily}
                     />
                 );
 
-            case routesMap.weekly:
-                return (
-                    <WeeklyView
-                        key={cityIndex}
-                        cities={cities}
-                    />
-                );
+            case forecastMap.weekly:
+                const list = _.get(cities, "activeCity.list", []);
+
+                return list.map((c, cIndex) => {
+                    return (
+                        <CityCardView
+                            key={cIndex}
+                            city={c}
+                            type={forecastMap.weekly}
+                        />
+                    )
+                });
             default:
                 return null;
         }
@@ -99,4 +112,4 @@ function CitiesView(props) {
     );
 }
 
-export default withRouter(CitiesView);
+export default CitiesView;

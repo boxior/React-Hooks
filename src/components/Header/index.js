@@ -3,7 +3,6 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import SearchView from "./Search";
 import ForecastView from "./SwitchForecast";
-import CitiesView from "./Cities";
 import Paper from "@material-ui/core/Paper";
 
 const HeaderWrap = styled.div`
@@ -23,7 +22,6 @@ const HeaderTop = styled(Paper)`
 
 HeaderView.propTypes = {
     onFind: PropTypes.func,
-    setCities: PropTypes.func,
     cities: PropTypes.object
 };
 
@@ -33,7 +31,6 @@ function HeaderView(props) {
     const {
         onFind,
         cities,
-        setCities
     } = props;
 
     return (
@@ -46,11 +43,6 @@ function HeaderView(props) {
                 />
                 <ForecastView/>
             </HeaderTop>
-            <CitiesView
-                setCities={setCities}
-                cities={cities}
-                onFind={onFind}
-            />
         </HeaderWrap>
     );
 }

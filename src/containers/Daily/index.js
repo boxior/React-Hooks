@@ -1,26 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
-import _ from "lodash";
-import CityCardView from "../../components/CityCard";
+import CitiesView from "../../components/Header/Cities";
 import {forecastMap} from "../../utils/variables";
 
 
 DailyView.propTypes = {
-    cities: PropTypes.object
+    cities: PropTypes.object,
+    setCities: PropTypes.func,
+    onFind: PropTypes.func
 };
 
 DailyView.defaultProps = {};
 
 function DailyView(props) {
     const {
-        cities
+        cities,
+        setCities,
+        onFind
     } = props;
-
-    const activeCity = _.get(cities, "activeCity", null);
-
-    return activeCity && (
-        <CityCardView
-            city={activeCity}
+    
+    return (
+        <CitiesView
+            setCities={setCities}
+            cities={cities}
+            onFind={onFind}
             type={forecastMap.daily}
         />
     );

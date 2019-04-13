@@ -67,8 +67,8 @@ function SwitchForecastView(props) {
                 value={getValue()}
                 onChange={handleChange}
             >
-                <FormControlLabel value={forecastMap.daily} control={<Radio/>} label="Daily"/>
-                <FormControlLabel value={forecastMap.weekly} control={<Radio/>} label="Weekly"/>
+                <FormControlLabel value={forecastMap.daily} control={<Radio color={`primary`}/>} label="Daily"/>
+                <FormControlLabel value={forecastMap.weekly} control={<Radio color={`primary`}/>} label="Weekly"/>
             </SwitchForecastRadioGroup>
         </FormControl>
     );

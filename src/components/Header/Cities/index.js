@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import {forecastMap} from "../../../utils/variables";
 import _ from "lodash";
 import CityCardView from "../../CityCard";
+import withWidthView from "../../HOC/withWidth";
 
 const CitiesWrap = styled.div`
     display: flex;
@@ -30,7 +31,7 @@ function CitiesView(props) {
         setCities,
         type
     } = props;
-
+    
     const {
         data,
         activeCity
@@ -121,4 +122,4 @@ function CitiesView(props) {
     );
 }
 
-export default CitiesView;
+export default withWidthView(CitiesView);

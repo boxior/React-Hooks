@@ -1,16 +1,19 @@
-import React, {useEffect, useContext} from "react";
+import React, {useEffect, useContext, useRef, useLayoutEffect} from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import {withFormik} from "formik";
 import * as Yup from "yup";
 import _ from "lodash";
 import {AppContext} from "../../../App/index";
+import ReactDOM from "react-dom";
+import FancyInput from "./FancyTextField";
+import {withRouter} from "react-router-dom";
 
 const SearchWrap = styled.div`
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     padding: 25px;
 `;
 
@@ -19,18 +22,12 @@ const SearchForm = styled.form`
     align-items: flex-start;
 `;
 
-const SearchButton = styled(Button)`
-    && {
-        padding: 0 15px;
-        text-transform: capitalize;
-        height: 55px;
-    }
-`;
-
 SearchView.propTypes = {
     onSubmit: PropTypes.func,
     cities: PropTypes.object,
-    value: PropTypes.string
+    value: PropTypes.string,
+    location: PropTypes.object,
+    render: PropTypes.func,
 };
 
 SearchView.defaultProps = {};
@@ -50,8 +47,10 @@ function SearchView(props) {
         resetForm,
         setSubmitting,
         setFieldError,
+        location,
+        render
     } = props;
-    
+
     const {
         cities
     } = context;
@@ -63,6 +62,22 @@ function SearchView(props) {
         isSuccessGetDaily,
         isSuccessGetWeekly
     } = cities;
+
+    const refInput = useRef(null);
+    const fancyInputRef = useRef(null);
+
+    useLayoutEffect(() => {
+        if (fancyInputRef.current) {
+            fancyInputRef.current.focus();
+        }
+    }, [location.pathname]);
+
+    useEffect(() => {
+        if (refInput.current) {
+            ReactDOM.findDOMNode(refInput.current).getElementsByTagName(`input`)[0].focus();
+        }
+
+    }, []);
 
     useEffect(() => {
 
@@ -97,30 +112,48 @@ function SearchView(props) {
         }
     };
 
+    function renderInput(type) {
+        if (type === `fancy`) {
+            return (
+                <FancyInput
+                    ref={fancyInputRef}
+                    values={values}
+                    errors={errors}
+                    touched={touched}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    getHelperText={getHelperText}
+                />
+            )
+        }
+
+        return (
+            <TextField
+                name="city"
+                id="city"
+                variant="outlined"
+                value={values.city}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                label={`City`}
+                error={errors.city && touched.city}
+                helperText={getHelperText(errors.city, touched.city)}
+                ref={refInput}
+            />
+        )
+    }
+
     return (
         <SearchWrap>
             <SearchForm
                 onSubmit={handleSubmit}
             >
-                <TextField
-                    name="city"
-                    id="city"
-                    variant="outlined"
-                    value={values.city}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    label={`City`}
-                    error={errors.city && touched.city}
-                    helperText={getHelperText(errors.city, touched.city)}
-                />
-                <SearchButton
-                    type={`submit`}
-                    variant={"contained"}
-                    color={`primary`}
-                    disabled={isSubmitting}
-                >
-                    Find
-                </SearchButton>
+                {renderInput('')}
+
+                {render({
+                    isSubmitting,
+                    title: "Search"
+                })}
             </SearchForm>
         </SearchWrap>
     );
@@ -145,4 +178,4 @@ const withForm = withFormik({
     displayName: 'findCity',
 });
 
-export default withForm(SearchView);
+export default withRouter(withForm(SearchView));

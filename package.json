@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "proxy": "http://api.openweathermap.org",
+    "homepage": "https://boxior.github.io/React-Hooks/",
     "dependencies": {
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
@@ -12,7 +13,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "deploy": "gh-pages -d build"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -27,6 +29,7 @@
         "@material-ui/core": "^3.9.3",
         "axios": "^0.18.0",
         "formik": "^1.5.2",
+        "gh-pages": "^2.0.1",
         "history": "^4.9.0",
         "lodash": "^4.17.11",
         "moment": "^2.24.0",
